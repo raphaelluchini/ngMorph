@@ -16,7 +16,8 @@
           if(componentSettings.callback){
             componentSettings.callback();
           }
-          $rootScope.$destroy(scope);
+          morphableObject.closeEl.unbind('click');
+          morphableObject = null;
         };
 
         var compile = function (results) {
