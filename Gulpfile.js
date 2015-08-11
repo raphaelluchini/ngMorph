@@ -30,7 +30,7 @@ gulp.task('concat', function(){
 
 gulp.task('uglify',function(){
   return gulp.src('./dist/angular-morph.js')
-    .pipe(uglify())
+    // .pipe(uglify())
     .pipe(concat('angular-morph.min.js'))
     .pipe(gulp.dest(paths.dist))
     .pipe(notify({message: 'Build Done'}));

@@ -2,31 +2,37 @@
   "use strict";
 
   angular.module('morph.directives')
-  .directive('ngMorphModal', ['TemplateHandler', '$compile', 'Morph', function (TemplateHandler, $compile, Morph) {
+  .directive('ngMorph', ['TemplateHandler', '$compile', 'Morph', '$rootScope', function (TemplateHandler, $compile, Morph, $rootScope) {
     return {
       restrict: 'A',
       scope: true,
       link: function (scope, element, attrs) {
         var wrapper = angular.element('<div></div>').css('visibility', 'hidden');
-        var settings = scope[attrs.ngMorphModal];
+        var _settings = {};
+        var componentSettings = scope[attrs.ngMorph];
         var isMorphed = false;
+        var currentScope = scope;
 
+        _settings.callback = componentSettings.callback;
         var compile = function (results) {
           var morphTemplate = results.data ? results.data : results;
-          return $compile(morphTemplate)(scope);
+          currentScope = $rootScope.$new();
+          currentScope.data = componentSettings.data;
+          currentScope.actions = componentSettings.actions;
+          return $compile(morphTemplate)(currentScope);
         };
 
         var initMorphable = function (content) {
-          var closeEl  = angular.element(content[0].querySelector(settings.closeEl));
+          var closeEl  = angular.element(content[0].querySelector(componentSettings.closeEl));
           var elements = {
             morphable: element,
             wrapper: wrapper,
             content: content
           };
-
+          var fade = null;
           // create element for modal fade
-          if (settings.modal.fade !== false) {
-            var fade = angular.element('<div></div>');
+          if (componentSettings.fade !== false) {
+            fade = angular.element('<div></div>');
             elements.fade = fade;
           }
 
@@ -35,25 +41,24 @@
           element.after(wrapper);
           if (fade) wrapper.after(fade);
           
-          // set the wrapper bg color
+          // // set the wrapper bg color
           wrapper.css('background', getComputedStyle(content[0]).backgroundColor);
 
-          // get bounding rectangles
-          settings.MorphableBoundingRect = element[0].getBoundingClientRect();
-          settings.ContentBoundingRect = content[0].getBoundingClientRect();
-          
-          // bootstrap the modal
-          var modal = new Morph('Modal', elements, settings);
-          
+          // // get bounding rectangles
+          _settings.MorphableBoundingRect = element[0].getBoundingClientRect();
+          _settings.ContentBoundingRect = content[0].getBoundingClientRect();
+          // // bootstrap the modal
+          var modal = new Morph(componentSettings.transition, elements, _settings);
+
           // attach event listeners
           element.bind('click', function () {
-            settings.MorphableBoundingRect = element[0].getBoundingClientRect();
+            _settings.MorphableBoundingRect = element[0].getBoundingClientRect();
             isMorphed = modal.toggle(isMorphed);
           });
 
           if (closeEl) {
             closeEl.bind('click', function (event) {
-              settings.MorphableBoundingRect = element[0].getBoundingClientRect();
+              _settings.MorphableBoundingRect = element[0].getBoundingClientRect();
               isMorphed = modal.toggle(isMorphed);
             });
           }
@@ -65,11 +70,11 @@
           });
         };
 
-        if (settings.modal.template) {
-          initMorphable(compile(settings.modal.template));
-        } else if (settings.modal.templateUrl) {
+        if (componentSettings.template) {
+          initMorphable(compile(componentSettings.template));
+        } else if (componentSettings.templateUrl) {
           TemplateHandler
-            .get(settings.modal.templateUrl)
+            .get(componentSettings.templateUrl)
             .then(compile)
             .then(initMorphable);
         } else {

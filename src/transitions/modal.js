@@ -5,9 +5,8 @@
   .factory('Modal', [ function () {
     return function (elements, settings) {
       var enter = {
-        wrapper: function (element, settings) {
-          var ContentBoundingRect = settings.ContentBoundingRect;
-          var modalSettings = settings.modal;
+        wrapper: function (element, modalSettings) {
+          var ContentBoundingRect = modalSettings.ContentBoundingRect;
           var top = '50%';
           var left = '50%';
           var margin = 0;
@@ -119,6 +118,10 @@
             element.css({
               'display': 'none'
             });
+            if(settings.callback){
+              settings.callback();
+            }
+
           }, 525);
         }
       };

@@ -4,6 +4,7 @@
   angular.module('morph.transitions')
   .factory('Overlay', [ function () {
     return function (elements, settings) {
+
       var enter = {
         wrapper: function (element, settings) {
           element.css({
@@ -21,7 +22,7 @@
 
           // add vertical scrollbar once full-screen.
           // TODO: add before/after animation hooks.
-          if ( settings.overlay.scroll !== false ) {
+          if ( settings.scroll !== false ) {
             setTimeout( function () {
               element.css({'overflow-y': 'scroll'});
             }, 500);
@@ -67,8 +68,8 @@
         },
         content: function (element, settings) {
           element.css({
-            'transition': 'opacity 0.22s ease',
-            '-webkit-transition': 'opacity 0.22s ease',         
+            'transition': 'opacity 0.22s',
+            '-webkit-transition': 'opacity 0.22s',         
             'height': '0',
             'opacity': '0'
           });
@@ -100,12 +101,16 @@
             // wrap in timeout to allow relocation to finish. transition styles are added too soon without this.
             setTimeout( function () {
               angular.forEach(elements, function (element, elementName) {
-                enter[elementName](element, settings);
+                if(enter[elementName]){
+                  enter[elementName](element, settings);
+                }
               });
             }, 25 );
           } else {
             angular.forEach(elements, function (element, elementName) {
-              exit[elementName](element, settings);
+              if(exit[elementName]){
+                exit[elementName](element, settings);
+              }
             });
           }
 

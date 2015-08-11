@@ -2,7 +2,7 @@
   "use strict";
 
   angular.module('morph', [
-    'morph.transitions', 
+    'morph.transitions',
     'morph.assist'
   ])
   .factory('Morph', ['Transitions', 'Assist', function (Transitions, Assist) {
