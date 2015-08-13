@@ -29,7 +29,7 @@
           var ctrlInstance, ctrlLocals = {};
 
           if (componentSettings.controller) {
-            ctrlLocals = currentScope;
+            ctrlLocals.$scope = currentScope;
 
             ctrlInstance = $controller(componentSettings.controller, ctrlLocals);
             if (componentSettings.controllerAs) {
@@ -91,19 +91,26 @@
           _settings.MorphableBoundingRect = element[0].getBoundingClientRect();
           isMorphed = morphableObject.morph.toggle(isMorphed);
 
+          currentScope.dismiss = function(){
+            isMorphed = morphableObject.morph.toggle(true);
+          };
+
           if (morphableObject.closeEl) {
             morphableObject.closeEl.bind('click', function () {
               _settings.MorphableBoundingRect = element[0].getBoundingClientRect();
               isMorphed = morphableObject.morph.toggle(isMorphed);
             });
           }
+
+          // remove event handlers when scope is destroyed
+          scope.$on('$destroy', function () {
+            if(morphableObject){
+              if(morphableObject.closeEl){
+                morphableObject.closeEl.unbind('click');
+              }
+            }
+          });
         }
-
-        // remove event handlers when scope is destroyed
-        scope.$on('$destroy', function () {
-          morphableObject.closeEl.unbind('click');
-        });
-
       }
     };
   }]);
