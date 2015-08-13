@@ -31,21 +31,34 @@ Morphables require a settings object which you define in your controller. Settin
 ###Modal###
 
  ```html
-   <button ng-morph-modal="settings"> Log In </button>
+   <button ng-morph="settings"> Log In </button>
  ```
  
  ```js
    app.controller('AppCtrl', function ($scope) {
      $scope.settings = {
        closeEl: '.close',
-       modal: {
-         templateUrl: 'path/to/view.html',
-         position: {
-          top: '30%',
-          left: '20%'
-         },
-         fade: false
-       }
+       transition: 'modal'
+       templateUrl: 'path/to/view.html',
+       callback:{
+        console.log('On close');
+       },
+       controller: ['$scope', function($scope){
+        console.log($scope);
+       }],
+       data:{
+        param: 'Param 1'
+       },
+       actions:{
+        onClick:{
+          Console.log('On click in modal');
+        }
+       },
+       position: {
+        top: '30%',
+        left: '20%'
+       },
+       fade: false
      }
    });
  ```
@@ -61,17 +74,36 @@ __Modal Settings__
 ###Overlay###
 
  ```html
-   <div ng-morph-overlay="settings"> ... </div>
+   <div ng-morph="settings"> ... </div>
  ```
  
  ```js
    app.controller('AppCtrl', function ($scope) {
      $scope.settings = {
        closeEl: '.close',
-       overlay: {
-         templateUrl: 'path/to/view.html',
-         scroll: false
-       }
+       templateUrl: 'path/to/view.html',
+       scroll: false,
+       transition: 'overlay'
+       callback:{
+        console.log('On close');
+       },
+       controller: ['$scope', function($scope){
+        console.log($scope);
+       }],
+       data:{
+        param: 'Param 1'
+       },
+       actions:{
+        onClick:{
+          Console.log('On click in modal');
+        }
+       },
+       position: {
+        top: '30%',
+        left: '20%'
+       },
+       fade: false
+     }
      }
    });
  ```
@@ -83,23 +115,6 @@ __Modal Settings__
  - `templateUrl:` _Required if `template` is not defined_. The path to the view template.
  - `template:` _Required if `templateUrl` is not defined_. An HTML template string. If templateUrl is also defined, `template` will take priority.
  
- 
-###Expand (Coming Soon!)###
- 
- ```html
-   <div ng-morph-expand="settings"> ... </div>
- ```
- 
- ```js
-   app.controller('AppCtrl', function ($scope) {
-     $scope.settings = {
-       closeEl: '.close',
-       expand: {
-         templateUrl: 'path/to/view.html'
-       }
-     }
-   });
- ```
  
 ###Views###
 In order for elements to morph into their end-state view properly, the contents that make up the view need to be wrapped in a **single containing element**. Here's an example of what a proper view looks like: 
