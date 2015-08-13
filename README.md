@@ -9,13 +9,7 @@ This module is an attempt at packaging transitions/animations into directives th
 Available **[here](http://jimobrien.github.io/ngMorph/)**. Demo source available **[here](https://github.com/jimobrien/ngMorph/tree/gh-pages)**.
 
 ## Getting Started ##
-  1. Install with bower:
- 
-    ```sh
-      bower install --save angular-morph
-    ```
-
-  2. Include the module in your project: 
+  1. Include the module in your project: 
   
       ```js
         angular.module('yourApp', ['ngMorph']);
@@ -24,8 +18,6 @@ Available **[here](http://jimobrien.github.io/ngMorph/)**. Demo source available
 ## Usage ##
 
 Morphables require a settings object which you define in your controller. Settings for each morphable can be found in their respective usage example below.
-
-
 
 
 ###Modal###
